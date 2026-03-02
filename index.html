@@ -22,7 +22,6 @@
     button:hover { background:#1b2b49; }
     .pill { display:inline-block; padding: 2px 8px; border:1px solid var(--line); border-radius:999px; font-size:12px; color:var(--muted); }
     .ok { color:#a7f3d0; }
-    .bad { color:#fecaca; }
     pre { white-space: pre-wrap; background:#0f1626; border:1px solid var(--line); border-radius: 14px; padding: 12px; margin: 0; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
     .small { font-size: 12px; color: var(--muted); }
@@ -33,14 +32,14 @@
   <div class="wrap">
     <h1>장비 강화 최적 전략 시뮬레이터</h1>
     <p class="sub">
-      확률표(<span class="mono">대성공확률표.csv</span>)를 읽어서, 현재 상태/보유 키트 기준으로 “어떤 키트를 어떤 순서로 쓰는 게 좋은지”를 계산합니다.
-      <br/>기본 최적화는 <span class="pill">성공확률 최우선</span> + <span class="pill">동일 성공확률이면 희소(가치) 비용 최소</span> 입니다.
+      대성공 확률표를 <b>코드에 정적으로 내장</b>해서, 현재 상태/보유 키트 기준으로 “어떤 키트를 어떤 순서(정책)로 쓰는 게 좋은지”를 계산합니다.<br/>
+      기본 최적화: <span class="pill">목표 달성 확률 최우선</span> → 동률이면 <span class="pill">희소(가치) 비용 최소</span>
     </p>
 
     <div class="grid">
       <div class="card">
         <div class="row">
-          <span class="pill" id="loadState">확률표 로딩 중…</span>
+          <span class="pill ok">확률표 내장됨</span>
         </div>
 
         <div class="row">
@@ -97,15 +96,18 @@
           <button id="btnSim">몬테카를로(5000회) 검증</button>
         </div>
 
+        <p class="small">
+          GitHub Pages에는 <span class="mono">index.html</span>과 <span class="mono">app.js</span>만 올리면 됩니다.
+        </p>
       </div>
 
       <div class="card">
         <h2 style="font-size:16px; margin:0 0 10px;">결과</h2>
-        <pre id="out" class="mono">로딩 완료 후 “최적 전략 계산”을 눌러주세요.</pre>
+        <pre id="out" class="mono">“최적 전략 계산”을 눌러주세요.</pre>
       </div>
     </div>
   </div>
 
-  <script type="module" src="./app.js"></script>
+  <script src="./app.js"></script>
 </body>
 </html>
