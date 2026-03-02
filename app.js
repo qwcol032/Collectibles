@@ -130,9 +130,7 @@ function compareResult(a, b, priority) {
 
 // BigInt 키로 메모이제이션 (정책=순서 최적화 핵심)
 function packKey(s) {
-  // key = ((((((g*16 + st)*32 + x)*1024 + b)*1024 + i)*1024 + a))
-  const g = s.g === "SR" ? 1n : 0n;
-  return ((((((g * 16n + BigInt(s.st)) * 32n + BigInt(s.x)) * 1024n + BigInt(s.b)) * 1024n + BigInt(s.i)) * 1024n + BigInt(s.a)));
+  return `${s.g}|${s.st}|${s.x}|${s.b}|${s.i}|${s.a}`;
 }
 
 function estimateStateCount(s) {
@@ -230,16 +228,25 @@ function readInputs() {
   const st = clampInt(Number($("stage").value), 0, 15);
   const xpUnits = normXpToUnits(g, Number($("xp").value));
 
-  const b = clampInt(Number($("bCnt").value), 0, 1023);
-  const i = clampInt(Number($("iCnt").value), 0, 1023);
-  const a = clampInt(Number($("aCnt").value), 0, 1023);
+  const bRaw = clampInt(Number($("bCnt").value), 0, 999999);
+  const iRaw = clampInt(Number($("iCnt").value), 0, 999999);
+  const aRaw = clampInt(Number($("aCnt").value), 0, 999999);
+
+  // ✅ 10개당 1회 시도
+  const b = Math.floor(bRaw / 10);
+  const i = Math.floor(iRaw / 10);
+  const a = Math.floor(aRaw / 10);
 
   const goalMode = $("goalMode").value;
   const priority = $("priority").value;
   const costMode = $("costMode").value;
   const stateLimit = clampInt(Number($("stateLimit").value), 100000, 20000000);
 
-  return { start: { g, st, x: xpUnits, b, i, a }, goalMode, priority, costMode, stateLimit };
+  return {
+    start: { g, st, x: xpUnits, b, i, a }, // b/i/a = "남은 시도 횟수"
+    meta: { bRaw, iRaw, aRaw, bRem: bRaw % 10, iRem: iRaw % 10, aRem: aRaw % 10 },
+    goalMode, priority, costMode, stateLimit
+  };
 }
 
 function explainWhyOrderMatters(s) {
